@@ -176,6 +176,31 @@
     });
     const yearEl = document.querySelector('[data-current-year]');
     if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+    // Candle blow out interaction
+    const candles = document.querySelectorAll('.candle');
+    const candlesContainer = document.querySelector('.ending__candles');
+    const signoff = document.querySelector('.ending__signoff');
+    
+    let blownOut = 0;
+    candles.forEach(candle => {
+      candle.addEventListener('click', () => {
+        if (!candle.classList.contains('is-out')) {
+          candle.classList.add('is-out');
+          blownOut++;
+          if (blownOut === candles.length) {
+            candlesContainer?.classList.add('is-all-out');
+            if (signoff) {
+              signoff.style.opacity = '0';
+              setTimeout(() => {
+                signoff.textContent = 'Wish granted.';
+                signoff.style.opacity = '1';
+              }, 400);
+            }
+          }
+        }
+      });
+    });
   }
 
   /* ── Boot ───────────────────────────────────────────────── */

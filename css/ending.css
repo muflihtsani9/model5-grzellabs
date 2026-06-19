@@ -67,6 +67,11 @@
   height: 24px;
   background: radial-gradient(ellipse, rgba(255,215,106,0.22), transparent 75%);
   pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.ending__candles.is-all-out::after {
+  opacity: 0;
 }
 
 .candle {
@@ -76,6 +81,12 @@
   background: linear-gradient(180deg, #fff7e6, var(--c-bio-gold));
   box-shadow: inset -2px 0 4px rgba(0,0,0,0.12);
   position: relative;
+  cursor: pointer;
+  transition: background 0.4s ease;
+}
+
+.candle.is-out {
+  background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,215,106,0.4));
 }
 
 .candle:nth-child(1) { height: 48px; }
@@ -96,6 +107,12 @@
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   animation: flicker 1.4s ease-in-out infinite alternate;
   filter: blur(0.3px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.candle.is-out::before {
+  opacity: 0;
+  transform: translateX(-50%) scale(0) rotate(0deg);
 }
 
 .candle:nth-child(2)::before { animation-delay: 0.2s; }
@@ -115,6 +132,7 @@
   font-style: italic;
   font-size: 1.4rem;
   color: var(--c-bio-cyan-soft);
+  transition: opacity 0.4s ease;
 }
 
 .ending__replay {
