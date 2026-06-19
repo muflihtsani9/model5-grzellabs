@@ -1,0 +1,57 @@
+/* ==========================================================================
+   ANIMATIONS — shared keyframes & progress chrome
+   ========================================================================== */
+
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--c-bio-cyan), var(--c-bio-gold));
+  box-shadow: 0 0 12px rgba(62, 198, 224, 0.5);
+  z-index: calc(var(--z-nav) + 1);
+  transition: width 0.1s linear;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes drift {
+  0% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(10px) rotate(3deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-up { animation: fadeUp var(--dur-slow) var(--ease-out) forwards; }
+.animate-fade-in { animation: fadeIn var(--dur-slow) var(--ease-out) forwards; }
+
+/* Skip-to-content link, accessible but invisible until focused */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--c-bio-cyan);
+  color: var(--c-abyss);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-sm);
+  z-index: 9999;
+  font-weight: 600;
+}
+.skip-link:focus { left: var(--sp-3); top: var(--sp-3); }

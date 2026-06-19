@@ -1,0 +1,279 @@
+/* ==========================================================================
+   LAYOUT — page structure, containers, section scaffolding
+   ========================================================================== */
+
+/* Fixed full-viewport ambient layer — particles + vignette only.
+   The actual depth-gradient now lives on <body> so it spans the true
+   document height and the descent feels continuous while scrolling,
+   rather than resetting at every viewport-height. */
+.ocean-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-bg);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ocean-backdrop__glows,
+.ocean-backdrop__rays,
+.ocean-backdrop__particles,
+.ocean-backdrop__vignette {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Ambient glow blobs — soft color throughout the whole scroll, not just
+   the hero, so the page never reads as visually flat/empty once you're
+   past the opening section. */
+.ocean-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(85px);
+  will-change: transform;
+}
+
+.ocean-glow--1 {
+  width: 30vw; height: 30vw;
+  min-width: 360px; min-height: 360px; max-width: 560px; max-height: 560px;
+  background: radial-gradient(circle, rgba(62, 198, 224, 0.26), transparent 70%);
+  top: 6%; left: -6%;
+  animation: oceanGlowDrift1 24s var(--ease-in-out) infinite;
+}
+
+.ocean-glow--2 {
+  width: 26vw; height: 26vw;
+  min-width: 320px; min-height: 320px; max-width: 480px; max-height: 480px;
+  background: radial-gradient(circle, rgba(255, 215, 106, 0.16), transparent 70%);
+  top: 42%; right: -8%;
+  animation: oceanGlowDrift2 28s var(--ease-in-out) infinite;
+}
+
+.ocean-glow--3 {
+  width: 24vw; height: 24vw;
+  min-width: 280px; min-height: 280px; max-width: 440px; max-height: 440px;
+  background: radial-gradient(circle, rgba(143, 227, 240, 0.2), transparent 70%);
+  bottom: 6%; left: 22%;
+  animation: oceanGlowDrift3 20s var(--ease-in-out) infinite;
+}
+
+@keyframes oceanGlowDrift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3vw, 2vh) scale(1.08); }
+}
+@keyframes oceanGlowDrift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-2.5vw, -2vh) scale(1.05); }
+}
+@keyframes oceanGlowDrift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(2vw, -2.5vh) scale(1.06); }
+}
+
+/* Light rays — faint, slow-drifting shafts for underwater depth. Kept
+   very subtle (low opacity, soft blur) so they read as atmosphere, never
+   as a distinct or "cheap" animated element competing with content. */
+.ocean-backdrop__rays {
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+
+.light-ray {
+  position: absolute;
+  top: -12%;
+  width: clamp(120px, 11vw, 200px);
+  height: 145%;
+  background: linear-gradient(180deg, rgba(244, 249, 255, 0.09), rgba(143, 227, 240, 0.03) 55%, transparent 80%);
+  filter: blur(22px);
+  transform-origin: top center;
+  will-change: transform, opacity;
+}
+
+.light-ray--1 { left: 10%; transform: rotate(7deg); animation: rayDrift1 17s var(--ease-in-out) infinite; }
+.light-ray--2 { left: 46%; transform: rotate(-5deg); animation: rayDrift2 21s var(--ease-in-out) infinite; }
+.light-ray--3 { left: 80%; transform: rotate(9deg); animation: rayDrift3 19s var(--ease-in-out) infinite; }
+
+@keyframes rayDrift1 { 0%, 100% { opacity: 0.4; transform: rotate(7deg) translateX(0); } 50% { opacity: 0.75; transform: rotate(5deg) translateX(12px); } }
+@keyframes rayDrift2 { 0%, 100% { opacity: 0.3; transform: rotate(-5deg) translateX(0); } 50% { opacity: 0.6; transform: rotate(-7deg) translateX(-10px); } }
+@keyframes rayDrift3 { 0%, 100% { opacity: 0.35; transform: rotate(9deg) translateX(0); } 50% { opacity: 0.68; transform: rotate(7deg) translateX(8px); } }
+
+@media (max-width: 720px) {
+  .ocean-backdrop__rays { display: none; }
+  .ocean-glow { filter: blur(50px); }
+  .ocean-glow--1, .ocean-glow--2, .ocean-glow--3 { min-width: 220px; min-height: 220px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ocean-glow, .light-ray { animation: none; }
+}
+
+.ocean-backdrop__vignette {
+  background: radial-gradient(ellipse at 50% 0%, transparent 0%, rgba(0,0,0,0.28) 72%, rgba(0,0,0,0.5) 100%);
+  pointer-events: none;
+}
+
+main {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+.section {
+  position: relative;
+  padding: var(--section-pad-y) var(--gutter);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Content sections (lists/grids) flow with their natural height instead of
+   being forced to fill the viewport — prevents oversized empty padding on
+   tall screens and keeps rhythm driven by actual content. */
+.memories, .gallery, .wishes {
+  min-height: 0;
+}
+
+.section__inner {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+.section__inner--narrow { max-width: var(--content-narrow); }
+
+.section-header {
+  margin-bottom: var(--sp-6);
+  max-width: 640px;
+}
+
+.section-header--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section-header--center .section-lede {
+  margin-inline: auto;
+}
+
+/* Depth marker rail — fixed at viewport edge, shows scroll-depth like a dive computer */
+.depth-rail {
+  position: fixed;
+  right: clamp(0.8rem, 2.5vw, 2.2rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-nav);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  pointer-events: none;
+}
+
+.depth-rail__track {
+  position: relative;
+  width: 2px;
+  height: 220px;
+  background: var(--c-line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.depth-rail__fill {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to bottom, var(--c-bio-cyan), var(--c-bio-gold));
+  border-radius: 2px;
+  transition: height 0.15s linear;
+}
+
+.depth-rail__value {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--c-bio-cyan-soft);
+  letter-spacing: 0.05em;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+@media (max-width: 880px) {
+  .depth-rail { display: none; }
+}
+
+/* Generic divider / wave seam between sections — translucent fill so it
+   blends naturally with the body's depth-gradient at any scroll position,
+   rather than relying on a hardcoded color matched to one exact spot. */
+.seam {
+  position: relative;
+  height: clamp(40px, 8vw, 90px);
+  margin-top: calc(-1 * clamp(20px, 4vw, 45px));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.seam svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.seam__fill { fill: var(--c-seam-mid); }
+.seam__crest {
+  stroke: rgba(143, 227, 240, 0.4);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 4px rgba(62, 198, 224, 0.35));
+}
+.seam--mid .seam__fill { fill: var(--c-seam-mid); }
+.seam--deep .seam__fill { fill: var(--c-seam-deep); }
+.seam--abyss .seam__fill { fill: var(--c-seam-abyss); }
+
+/* Utility containers */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-6);
+  align-items: center;
+}
+
+@media (max-width: 880px) {
+  .grid-2 { grid-template-columns: 1fr; gap: var(--sp-5); }
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 1rem 1.85rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--c-bio-cyan), #2a9fc0);
+  color: var(--c-abyss);
+  font-weight: 600;
+  font-size: 0.98rem;
+  letter-spacing: 0.005em;
+  box-shadow: var(--shadow-glow-cyan), var(--shadow-card);
+  transition: transform 0.45s var(--ease-out), box-shadow 0.45s var(--ease-out), background 0.3s var(--ease-out);
+}
+
+.cta-btn__icon {
+  transition: transform 0.35s var(--ease-out);
+  flex-shrink: 0;
+}
+
+.cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow-cyan-lg), var(--shadow-card-hover);
+}
+.cta-btn:hover .cta-btn__icon { transform: translateY(2px); }
+.cta-btn:active { transform: translateY(-1px); transition-duration: 0.15s; }
+
+.cta-btn--ghost {
+  background: transparent;
+  color: var(--c-foam);
+  border: 1px solid var(--c-line-strong);
+  box-shadow: none;
+}
+.cta-btn--ghost:hover {
+  border-color: var(--c-panel-border-hover);
+  color: var(--c-bio-cyan-soft);
+  background: rgba(143, 227, 240, 0.05);
+  box-shadow: var(--shadow-glow-cyan);
+}
+.cta-btn--ghost:hover .cta-btn__icon { transform: translateY(-2px); }

@@ -1,0 +1,211 @@
+/* ==========================================================================
+   GALLERY — uniform 3:4 portrait grid with lightbox
+   Every tile shares the exact same aspect ratio and dimensions so the
+   grid reads as a single, considered composition rather than a loose
+   assortment — closer to a gallery wall than a photo dump.
+   ========================================================================== */
+
+.gallery__grid {
+  margin-top: var(--sp-6);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
+}
+
+.gallery__item {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--c-panel-border);
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transform: translateY(26px) scale(0.97);
+  transition: opacity 0.85s var(--ease-out), transform 0.85s var(--ease-out),
+              box-shadow 0.45s var(--ease-out), border-color 0.45s var(--ease-out);
+  transition-delay: var(--d, 0s);
+}
+
+.gallery__item.is-visible { opacity: 1; transform: translateY(0) scale(1); }
+
+.gallery__item.is-visible:hover {
+  transform: translateY(-6px);
+  border-color: var(--c-panel-border-hover);
+  box-shadow: var(--shadow-card-hover);
+  transition-delay: 0s;
+}
+
+.gallery__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease-out);
+}
+
+.gallery__item:hover .gallery__media { transform: scale(1.06); }
+
+/* Placeholder visual shown until real photos are supplied — designed to
+   read as an intentional "plate" rather than a broken image. */
+.gallery__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  color: rgba(244, 249, 255, 0.55);
+  transition: transform 0.6s var(--ease-out);
+}
+
+.gallery__item.is-visible:hover .gallery__placeholder { transform: scale(1.045); }
+
+.gallery__placeholder svg { width: 15%; height: 15%; min-width: 26px; min-height: 26px; opacity: 0.6; }
+
+.gallery__placeholder-index {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.gallery__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--sp-4);
+  background: linear-gradient(to top, rgba(2, 9, 18, 0.92) 0%, rgba(2, 9, 18, 0.32) 48%, transparent 78%);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.gallery__item:hover .gallery__overlay { opacity: 1; transform: translateY(0); }
+
+.gallery__caption {
+  font-size: 0.88rem;
+  color: var(--c-foam);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* ---- Responsive grid: 4 / 3 / 2 columns across desktop, tablet, mobile ---- */
+@media (max-width: 1024px) {
+  .gallery__grid { gap: var(--sp-3); }
+}
+
+@media (max-width: 880px) {
+  .gallery__grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .gallery__grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-2); }
+  .gallery__placeholder svg { min-width: 22px; min-height: 22px; }
+  .gallery__overlay { padding: var(--sp-3); }
+  .gallery__caption { font-size: 0.8rem; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .gallery__overlay { opacity: 1; transform: none; background: linear-gradient(to top, rgba(2,9,18,0.85) 0%, transparent 60%); }
+}
+
+/* ==========================================================================
+   LIGHTBOX
+   ========================================================================== */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: rgba(2, 7, 14, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s var(--ease-soft), visibility 0.5s var(--ease-soft);
+  padding: var(--gutter);
+}
+
+.lightbox.is-open { opacity: 1; visibility: visible; }
+
+.lightbox__frame {
+  position: relative;
+  width: min(420px, 78vw);
+  background: var(--c-panel-strong);
+  border: 1px solid var(--c-panel-border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3);
+  transform: scale(0.94);
+  box-shadow: var(--shadow-panel);
+  transition: transform 0.5s var(--ease-soft);
+}
+
+.lightbox.is-open .lightbox__frame { transform: scale(1); }
+
+.lightbox__media-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--c-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox__media-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.lightbox__media-wrap .gallery__placeholder svg { width: 22%; height: 22%; }
+
+.lightbox__caption {
+  margin-top: var(--sp-3);
+  text-align: center;
+  color: var(--c-foam-dim);
+  font-size: 0.95rem;
+  padding: 0 var(--sp-2);
+}
+
+/* Nav/close buttons anchor to the full overlay (not the frame) so their
+   position stays safely on-screen at any frame width or viewport size. */
+.lightbox__close, .lightbox__nav {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--c-line-strong);
+  color: var(--c-foam);
+  backdrop-filter: blur(8px);
+  transition: background 0.3s var(--ease-out), border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  z-index: 1;
+}
+
+.lightbox__close:hover, .lightbox__nav:hover {
+  background: rgba(62, 198, 224, 0.25);
+  border-color: var(--c-bio-cyan);
+}
+
+.lightbox__close { top: clamp(14px, 3vw, 32px); right: clamp(14px, 3vw, 32px); }
+.lightbox__close:hover { transform: scale(1.07); }
+
+.lightbox__nav--prev { left: clamp(10px, 3vw, 32px); top: 50%; transform: translateY(-50%); }
+.lightbox__nav--next { right: clamp(10px, 3vw, 32px); top: 50%; transform: translateY(-50%); }
+.lightbox__nav--prev:hover { transform: translateY(-50%) scale(1.07); }
+.lightbox__nav--next:hover { transform: translateY(-50%) scale(1.07); }
+
+@media (max-width: 600px) {
+  .lightbox { padding: var(--sp-3); }
+  .lightbox__frame { width: min(320px, 84vw); }
+  .lightbox__close, .lightbox__nav { width: 38px; height: 38px; }
+}

@@ -1,0 +1,162 @@
+/* ==========================================================================
+   LETTER — message in a bottle reveal
+   ========================================================================== */
+
+.letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.letter__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.letter__bottle-stage {
+  position: relative;
+  width: 220px;
+  height: 280px;
+  margin: var(--sp-6) auto 0;
+  cursor: pointer;
+}
+
+.letter__bottle-glow {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(62, 198, 224, 0.22), transparent 70%);
+  filter: blur(20px);
+  animation: bottleGlowPulse 3.6s var(--ease-in-out) infinite;
+  pointer-events: none;
+}
+
+@keyframes bottleGlowPulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.94); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+.bottle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 35px rgba(62,198,224,0.25));
+  animation: bottleBob 4.5s var(--ease-in-out) infinite;
+  transition: filter 0.4s var(--ease-out);
+}
+
+@keyframes bottleBob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-14px) rotate(2deg); }
+}
+
+.letter__bottle-stage:hover .bottle,
+.letter__bottle-stage:focus-visible .bottle {
+  filter: drop-shadow(0 16px 48px rgba(62,198,224,0.5));
+}
+.letter__bottle-stage:focus-visible { outline: none; }
+
+.letter__hint {
+  margin-top: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--c-foam-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  gap: var(--sp-2);
+}
+
+.letter__hint svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  animation: hintBounce 1.8s var(--ease-in-out) infinite;
+}
+
+@keyframes hintBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(3px); opacity: 1; }
+}
+
+.letter__bottle-stage.is-opened { display: none; }
+
+/* Envelope / unrolled letter panel */
+.letter__panel {
+  width: 100%;
+  margin-top: var(--sp-6);
+  background: linear-gradient(160deg, rgba(244,249,255,0.05), var(--c-panel));
+  border: 1px solid var(--c-panel-border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-6) var(--sp-6);
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
+  box-shadow: var(--shadow-panel);
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out),
+              max-height 1s var(--ease-out), padding 1s var(--ease-out), margin 1s var(--ease-out);
+}
+
+.letter__panel.is-open {
+  opacity: 1;
+  max-height: 1400px;
+  transform: translateY(0);
+}
+
+.letter__salutation {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-md);
+  color: var(--c-bio-gold);
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+.letter__body {
+  margin-top: var(--sp-4);
+  text-align: left;
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-relaxed);
+  color: var(--c-foam-dim);
+}
+
+.letter__body p { margin-bottom: var(--sp-4); }
+.letter__body p:last-child { margin-bottom: 0; }
+
+/* Typewriter caret */
+.letter__caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--c-bio-cyan);
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  animation: caretBlink 1s steps(1) infinite;
+}
+
+@keyframes caretBlink { 50% { opacity: 0; } }
+
+.letter__signature {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--c-line);
+  text-align: right;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--c-foam);
+}
+
+@media (max-width: 600px) {
+  .letter__panel { padding: var(--sp-5) var(--sp-4); }
+  .letter__bottle-stage { width: 170px; height: 220px; }
+}

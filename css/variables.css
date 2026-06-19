@@ -1,0 +1,110 @@
+/* ==========================================================================
+   DESIGN TOKENS — Ocean Birthday
+   A descent into a bioluminescent deep sea at twilight.
+   ========================================================================== */
+
+:root {
+  /* ---- Color: depth gradient from surface to abyss ---- */
+  --c-surface: #0c2f4f;       /* near-surface blue */
+  --c-mid: #04203d;           /* mid ocean */
+  --c-deep: #061528;          /* deep ocean */
+  --c-abyss: #020c1a;         /* abyssal black-navy */
+
+  --c-bio-cyan: #3ec6e0;      /* bioluminescent cyan accent */
+  --c-bio-cyan-soft: #8fe3f0;
+  --c-bio-gold: #ffd76a;      /* warm light-ray / sun-shaft accent */
+  --c-bio-gold-soft: #ffe9a8;
+  --c-coral: #ff8a7a;         /* rare warm accent for emphasis */
+
+  --c-foam: #f4f9ff;          /* primary text on dark */
+  --c-foam-dim: rgba(244, 249, 255, 0.72);
+  --c-foam-faint: rgba(244, 249, 255, 0.45);
+  --c-line: rgba(244, 249, 255, 0.12);
+  --c-line-strong: rgba(244, 249, 255, 0.22);
+
+  /* ---- Glass / panel surfaces ---- */
+  --c-panel: rgba(13, 37, 61, 0.46);
+  --c-panel-strong: rgba(8, 26, 44, 0.82);
+  --c-panel-border: rgba(143, 227, 240, 0.16);
+  --c-panel-border-hover: rgba(143, 227, 240, 0.4);
+  --panel-blur: blur(20px) saturate(150%);
+
+  /* ---- Seam dividers: translucent so they blend at any scroll position ---- */
+  --c-seam-mid: rgba(8, 30, 52, 0.62);
+  --c-seam-deep: rgba(5, 17, 30, 0.68);
+  --c-seam-abyss: rgba(2, 9, 18, 0.74);
+
+  /* ---- Typography ---- */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  --fs-display-xl: clamp(2.8rem, 8vw, 7rem);
+  --fs-display-lg: clamp(2.2rem, 5.5vw, 4.5rem);
+  --fs-display-md: clamp(1.6rem, 3.6vw, 2.8rem);
+  --fs-body-lg: clamp(1.1rem, 1.6vw, 1.35rem);
+  --fs-body: clamp(0.98rem, 1.1vw, 1.08rem);
+  --fs-caption: 0.78rem;
+  --fs-label: 0.72rem;
+
+  --lh-tight: 1.08;
+  --lh-snug: 1.3;
+  --lh-relaxed: 1.7;
+
+  --tracking-wide: 0.18em;
+  --tracking-wider: 0.28em;
+
+  /* ---- Spacing scale ---- */
+  --sp-1: 0.4rem;
+  --sp-2: 0.8rem;
+  --sp-3: 1.2rem;
+  --sp-4: 1.8rem;
+  --sp-5: 2.8rem;
+  --sp-6: 4.2rem;
+  --sp-7: 6.5rem;
+  --sp-8: 9.5rem;
+
+  --section-pad-y: clamp(5rem, 12vh, 9rem);
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --content-max: 1180px;
+  --content-narrow: 760px;
+
+  /* ---- Radii & shadows ---- */
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  --shadow-glow-cyan: 0 0 40px rgba(62, 198, 224, 0.25);
+  --shadow-glow-cyan-lg: 0 0 60px rgba(62, 198, 224, 0.38);
+  --shadow-glow-gold: 0 0 50px rgba(255, 215, 106, 0.2);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.18), 0 1px 1px rgba(0, 0, 0, 0.12);
+  --shadow-card-hover: 0 22px 48px rgba(0, 0, 0, 0.4), 0 0 32px rgba(62, 198, 224, 0.14);
+  --shadow-panel: 0 24px 64px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(244, 249, 255, 0.06) inset;
+  --shadow-float: 0 12px 32px rgba(0, 0, 0, 0.35);
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --dur-fast: 0.25s;
+  --dur-base: 0.6s;
+  --dur-slow: 1.1s;
+
+  --nav-h: 76px;
+  --z-bg: 0;
+  --z-content: 10;
+  --z-nav: 100;
+  --z-player: 90;
+  --z-overlay: 200;
+  --z-loader: 1000;
+  --z-pin: 10000;
+}
+
+@media (max-width: 720px) {
+  :root {
+    --nav-h: 64px;
+    --section-pad-y: clamp(3.5rem, 10vh, 6rem);
+  }
+}

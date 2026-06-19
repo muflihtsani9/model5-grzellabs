@@ -1,0 +1,47 @@
+/* ==========================================================================
+   RESPONSIVE — cross-cutting breakpoint adjustments
+   (component-specific responsive rules live alongside each component;
+   this file covers global/shared adjustments only)
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  :root { --gutter: clamp(1.25rem, 4vw, 3rem); }
+}
+
+@media (max-width: 720px) {
+  .section { min-height: auto; padding-top: calc(var(--nav-h) + var(--sp-5)); padding-bottom: var(--sp-6); }
+  .section-header { margin-bottom: var(--sp-5); }
+  /* Hero no longer reserves a full viewport, so the absolutely-positioned
+     scroll cue can't claim its own space without risking overlap with the
+     CTAs above it — retire it below this breakpoint (mobile/small tablet
+     users don't need the hint anyway). */
+  .hero__scroll-cue { display: none; }
+}
+
+@media (max-width: 480px) {
+  .section-lede { max-width: none; }
+}
+
+/* Backdrop-filter blur is expensive on low-power/mobile GPUs (especially
+   Safari) — ease it back on small screens where panels are also smaller
+   and the visual difference is negligible. */
+@media (max-width: 600px), (max-height: 600px) {
+  :root { --panel-blur: blur(12px) saturate(130%); }
+}
+
+/* Landscape phones: shrink min-heights so content isn't cropped */
+@media (max-height: 480px) and (orientation: landscape) {
+  .hero, .ending { min-height: auto; padding-top: calc(var(--nav-h) + var(--sp-4)); padding-bottom: var(--sp-5); }
+  .hero__scroll-cue { display: none; }
+}
+
+/* Coarse pointer (touch): remove hover-only affordances, enlarge tap targets */
+@media (hover: none) and (pointer: coarse) {
+  .gallery__overlay { opacity: 1; background: linear-gradient(to top, rgba(2,9,18,0.78) 0%, transparent 65%); }
+  .navbar__link, .nav-drawer__link { padding: 0.5rem 0; }
+}
+
+/* High-density / large desktop: cap line lengths from stretching too wide */
+@media (min-width: 1600px) {
+  :root { --content-max: 1320px; }
+}

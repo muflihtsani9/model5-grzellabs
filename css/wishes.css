@@ -1,0 +1,76 @@
+/* ==========================================================================
+   WISHES — floating wish cards
+   ========================================================================== */
+
+.wishes__grid {
+  margin-top: var(--sp-6);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-4);
+}
+
+.wish-card {
+  position: relative;
+  padding: var(--sp-5) var(--sp-4) var(--sp-4);
+  border-radius: var(--radius-lg);
+  background: var(--c-panel);
+  border: 1px solid var(--c-panel-border);
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out),
+              border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  transition-delay: var(--d, 0s);
+}
+
+.wish-card.is-visible { opacity: 1; transform: translateY(0); }
+.wish-card.is-visible:hover {
+  transform: translateY(-6px);
+  border-color: var(--c-panel-border-hover);
+  box-shadow: var(--shadow-card-hover);
+  transition-delay: 0s;
+}
+
+.wish-card__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(62,198,224,0.1);
+  border: 1px solid var(--c-panel-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-bio-gold);
+  transition: border-color 0.4s var(--ease-out);
+}
+.wish-card.is-visible:hover .wish-card__icon { border-color: rgba(255, 215, 106, 0.4); }
+
+.wish-card__icon svg { width: 21px; height: 21px; }
+
+.wish-card__text {
+  margin-top: var(--sp-4);
+  font-size: 1rem;
+  color: var(--c-foam-dim);
+  line-height: var(--lh-relaxed);
+}
+
+.wish-card__quote-mark {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-4);
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  color: rgba(255,215,106,0.13);
+  line-height: 1;
+  pointer-events: none;
+}
+
+@media (max-width: 880px) {
+  .wishes__grid { grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+}
+@media (max-width: 560px) {
+  .wishes__grid { grid-template-columns: 1fr; }
+  .wish-card { padding: var(--sp-4); }
+}

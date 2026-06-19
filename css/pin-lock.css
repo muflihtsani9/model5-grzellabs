@@ -1,0 +1,320 @@
+/* ==========================================================================
+   PIN LOCK SCREEN — premium gatekeeper, shown before the site is revealed.
+   Self-contained: doesn't touch any existing layout, only overlays it.
+   ========================================================================== */
+
+.pin-lock {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-pin);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 8%, rgba(62, 198, 224, 0.16), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 90%, rgba(255, 215, 106, 0.08), transparent 65%),
+    linear-gradient(180deg, var(--c-surface) 0%, var(--c-mid) 45%, var(--c-deep) 75%, var(--c-abyss) 100%);
+  overflow: hidden;
+  transition: opacity 0.8s var(--ease-soft), filter 0.8s var(--ease-soft);
+}
+
+.pin-lock.is-unlocked {
+  opacity: 0;
+  filter: blur(14px);
+  pointer-events: none;
+}
+
+/* ---- Ambient atmosphere: glows + rising bubbles, scoped to this screen ---- */
+.pin-lock__atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pin-lock__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  will-change: transform;
+}
+
+.pin-lock__glow--1 {
+  width: 46vw; height: 46vw; max-width: 520px; max-height: 520px;
+  top: -10%; left: -8%;
+  background: radial-gradient(circle, rgba(62, 198, 224, 0.3), transparent 70%);
+  animation: pinGlowDrift 18s var(--ease-in-out) infinite;
+}
+
+.pin-lock__glow--2 {
+  width: 38vw; height: 38vw; max-width: 440px; max-height: 440px;
+  bottom: -12%; right: -6%;
+  background: radial-gradient(circle, rgba(255, 215, 106, 0.18), transparent 70%);
+  animation: pinGlowDrift 22s var(--ease-in-out) infinite reverse;
+}
+
+@keyframes pinGlowDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3vw, 2vh) scale(1.08); }
+}
+
+.pin-lock__bubble {
+  position: absolute;
+  bottom: -10%;
+  left: var(--x, 50%);
+  width: var(--sz, 6px);
+  height: var(--sz, 6px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.85), rgba(143,227,240,0.25) 70%, transparent 100%);
+  box-shadow: 0 0 6px rgba(143, 227, 240, 0.4);
+  animation: pinBubbleRise var(--sp, 10s) linear infinite;
+  animation-delay: var(--dl, 0s);
+  opacity: 0;
+}
+
+@keyframes pinBubbleRise {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  8%   { opacity: 0.7; }
+  92%  { opacity: 0.5; }
+  100% { transform: translateY(-118vh) translateX(14px); opacity: 0; }
+}
+
+/* ---- Card ---- */
+.pin-lock__card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--sp-6) var(--sp-5) var(--sp-5);
+  border-radius: var(--radius-lg);
+  background: var(--c-panel-strong);
+  border: 1px solid var(--c-panel-border);
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
+  box-shadow: var(--shadow-panel), var(--shadow-glow-cyan);
+  animation: pinCardIn 0.9s var(--ease-out) both;
+}
+
+@keyframes pinCardIn {
+  from { opacity: 0; transform: translateY(22px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.pin-lock__mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-bio-cyan);
+  background: rgba(62, 198, 224, 0.1);
+  border: 1px solid var(--c-panel-border);
+  filter: drop-shadow(0 0 18px rgba(62, 198, 224, 0.4));
+  margin-bottom: var(--sp-3);
+  animation: pinMarkFloat 3.4s var(--ease-in-out) infinite;
+}
+.pin-lock__mark svg { width: 26px; height: 26px; }
+
+@keyframes pinMarkFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.pin-lock__eyebrow { margin-bottom: var(--sp-2); }
+
+.pin-lock__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 1.9rem);
+  font-weight: 600;
+  color: var(--c-foam);
+  letter-spacing: -0.01em;
+  line-height: var(--lh-tight);
+}
+
+.pin-lock__subtitle {
+  margin-top: var(--sp-2);
+  margin-bottom: var(--sp-5);
+  font-size: var(--fs-body);
+  color: var(--c-foam-dim);
+  line-height: var(--lh-relaxed);
+  max-width: 30ch;
+}
+
+.pin-lock__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  width: 100%;
+}
+
+/* ---- Digit boxes ---- */
+.pin-lock__digits {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: clamp(8px, 2.4vw, 14px);
+}
+
+.pin-digit {
+  width: clamp(40px, 11vw, 52px);
+  height: clamp(46px, 12.5vw, 58px);
+  border-radius: var(--radius-sm);
+  background: rgba(244, 249, 255, 0.04);
+  border: 1.5px solid var(--c-line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out), background 0.3s var(--ease-out);
+}
+
+.pin-digit__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c-bio-cyan);
+  box-shadow: 0 0 10px rgba(62, 198, 224, 0.7);
+  transform: scale(0);
+  transition: transform 0.25s var(--ease-out);
+}
+
+.pin-digit.is-filled .pin-digit__dot { transform: scale(1); }
+
+.pin-digit.is-active {
+  border-color: var(--c-panel-border-hover);
+  box-shadow: 0 0 0 3px rgba(62, 198, 224, 0.14), var(--shadow-glow-cyan);
+  background: rgba(62, 198, 224, 0.06);
+}
+
+.pin-lock__hidden-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  font-size: 16px; /* prevents iOS auto-zoom on focus */
+  z-index: 2;
+  cursor: default;
+}
+
+/* Error state — shake + red glow pulse */
+.pin-lock__card.is-error {
+  animation: pinShake 0.5s var(--ease-in-out);
+}
+
+@keyframes pinShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(4px); }
+}
+
+.pin-lock__card.is-error {
+  border-color: rgba(255, 110, 95, 0.55);
+  box-shadow: var(--shadow-panel), 0 0 46px rgba(255, 90, 75, 0.4);
+}
+
+.pin-lock__card.is-error .pin-digit {
+  border-color: rgba(255, 110, 95, 0.5);
+  background: rgba(255, 90, 75, 0.06);
+}
+
+.pin-lock__card.is-error .pin-digit__dot {
+  background: var(--c-coral);
+  box-shadow: 0 0 10px rgba(255, 138, 122, 0.7);
+}
+
+/* Success state — soft cyan/gold glow, then the screen fades via .is-unlocked */
+.pin-lock__card.is-success {
+  border-color: rgba(143, 227, 240, 0.6);
+  box-shadow: var(--shadow-panel), 0 0 60px rgba(255, 215, 106, 0.35), var(--shadow-glow-cyan-lg);
+  animation: pinSuccessPulse 0.9s var(--ease-soft);
+}
+
+@keyframes pinSuccessPulse {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+.pin-lock__card.is-success .pin-digit {
+  border-color: var(--c-bio-cyan);
+}
+.pin-lock__card.is-success .pin-digit__dot {
+  background: linear-gradient(135deg, var(--c-bio-cyan), var(--c-bio-gold));
+  box-shadow: 0 0 14px rgba(255, 215, 106, 0.7);
+}
+
+/* ---- Submit button (visual sibling of .cta-btn, sized for this card) ---- */
+.pin-lock__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--c-bio-cyan), #2a9fc0);
+  color: var(--c-abyss);
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: var(--shadow-glow-cyan), var(--shadow-card);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+.pin-lock__submit:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow-cyan-lg), var(--shadow-card-hover); }
+.pin-lock__submit:active { transform: translateY(0); }
+.pin-lock__submit svg { transition: transform 0.3s var(--ease-out); }
+.pin-lock__submit:hover svg { transform: translateX(2px); }
+
+/* ---- Error notification (no browser alerts — inline, elegant, accessible) ---- */
+.pin-lock__error {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: var(--sp-3);
+  margin-bottom: calc(-1 * var(--sp-2));
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 90, 75, 0.12);
+  border: 1px solid rgba(255, 110, 95, 0.35);
+  color: #ffb3a8;
+  font-size: 0.84rem;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+.pin-lock__error.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.pin-lock__error svg { flex-shrink: 0; }
+
+@media (max-width: 480px) {
+  .pin-lock__card { padding: var(--sp-5) var(--sp-4) var(--sp-4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin-lock,
+  .pin-lock__card,
+  .pin-lock__glow,
+  .pin-lock__bubble,
+  .pin-lock__mark {
+    animation: none !important;
+    transition: opacity 0.4s ease !important;
+  }
+  .pin-lock__card.is-error { transform: none; }
+}
